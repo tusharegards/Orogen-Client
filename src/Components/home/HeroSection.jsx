@@ -31,7 +31,7 @@ const HeroSection = () => {
 
       <Grid {...heroStyles.grid} id="top">
         <Box {...heroStyles.copy}>
-          <Text {...heroStyles.eyebrow}>Mountain formation for modern startups</Text>
+          <Text {...heroStyles.eyebrow}>Mountain formation for modern startups and CEO's</Text>
           <Heading as="h1" {...heroStyles.title}>
             We help founders carve growth.
           </Heading>
