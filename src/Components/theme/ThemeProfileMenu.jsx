@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Button, Text } from '@chakra-ui/react'
+import { Box, Button, Text, HStack, Badge, VStack } from '@chakra-ui/react'
 import { useTheme } from 'next-themes'
+import { Link, useNavigate } from 'react-router'
+import { useAuth } from '../../context/AuthContext'
 import { profileMenuStyles } from '../../styles/siteShellStyles'
 
 const GearIcon = () => (
@@ -21,6 +23,9 @@ const GearIcon = () => (
 
 const ThemeProfileMenu = () => {
   const { resolvedTheme, setTheme } = useTheme()
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
   const [open, setOpen] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const menuRef = useRef(null)
@@ -45,8 +50,11 @@ const ThemeProfileMenu = () => {
     setTheme(isDark ? 'light' : 'dark')
   }
 
+  const isAdminOrSuperAdmin = user && ['admin', 'superadmin'].includes(user.role)
+
   return (
     <Box ref={menuRef} {...profileMenuStyles.wrapper}>
+      {/* Profile / Menu Trigger */}
       <Box
         as="button"
         type="button"
@@ -60,10 +68,113 @@ const ThemeProfileMenu = () => {
 
       {open ? (
         <Box {...profileMenuStyles.panel}>
-          <Text {...profileMenuStyles.panelTitle}>Profile</Text>
-          <Text {...profileMenuStyles.panelCopy}>
-            Appearance and session controls for your workspace.
-          </Text>
+          <VStack align="stretch" spacing={2.5} mb={3}>
+            {user ? (
+              <>
+                <HStack justify="space-between">
+                  <Text fontWeight="bold" fontSize="sm" color="#ffffff">{user.name}</Text>
+                  <Badge bg="rgba(232, 185, 120, 0.2)" color="var(--accent-soft)" fontSize="xs" px={2.5} py={0.5} borderRadius="full" fontWeight="bold">
+                    {user.role}
+                  </Badge>
+                </HStack>
+                <Text fontSize="xs" color="var(--text-soft)" mb={1}>{user.email}</Text>
+              </>
+            ) : (
+              <Box mb={1}>
+                <Text {...profileMenuStyles.panelTitle}>Account & Navigation</Text>
+                <Text {...profileMenuStyles.panelCopy}>
+                  Access system portals and site settings.
+                </Text>
+              </Box>
+            )}
+
+            {/* Navigation links under profile icon */}
+            <Button
+              size="sm"
+              bg="rgba(255, 255, 255, 0.08)"
+              color="#ffffff"
+              _hover={{ bg: 'rgba(255, 255, 255, 0.16)' }}
+              borderRadius="xl"
+              justifyContent="flex-start"
+              fontWeight="600"
+              onClick={() => { setOpen(false); navigate('/') }}
+            >
+              Home
+            </Button>
+
+            {user ? (
+              isAdminOrSuperAdmin ? (
+                <Button
+                  size="sm"
+                  bg="rgba(255, 255, 255, 0.16)"
+                  color="#ffffff"
+                  _hover={{ bg: 'rgba(255, 255, 255, 0.24)' }}
+                  borderRadius="xl"
+                  justifyContent="flex-start"
+                  fontWeight="700"
+                  onClick={() => { setOpen(false); navigate('/admin') }}
+                >
+                  Admin Console
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  bg="rgba(255, 255, 255, 0.16)"
+                  color="#ffffff"
+                  _hover={{ bg: 'rgba(255, 255, 255, 0.24)' }}
+                  borderRadius="xl"
+                  justifyContent="flex-start"
+                  fontWeight="700"
+                  onClick={() => { setOpen(false); navigate('/dashboard') }}
+                >
+                  User Dashboard
+                </Button>
+              )
+            ) : (
+              <HStack spacing={2}>
+                <Button
+                  size="sm"
+                  bg="rgba(255, 255, 255, 0.12)"
+                  color="#ffffff"
+                  _hover={{ bg: 'rgba(255, 255, 255, 0.2)' }}
+                  width="full"
+                  borderRadius="xl"
+                  fontWeight="600"
+                  onClick={() => { setOpen(false); navigate('/login') }}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  size="sm"
+                  bg="rgba(255, 255, 255, 0.16)"
+                  color="#ffffff"
+                  _hover={{ bg: 'rgba(255, 255, 255, 0.24)' }}
+                  width="full"
+                  borderRadius="xl"
+                  fontWeight="700"
+                  onClick={() => { setOpen(false); navigate('/signup') }}
+                >
+                  Sign Up
+                </Button>
+              </HStack>
+            )}
+
+            {user && (
+              <Button
+                size="sm"
+                bg="rgba(255, 255, 255, 0.12)"
+                color="#ffffff"
+                _hover={{ bg: 'rgba(255, 255, 255, 0.2)' }}
+                borderRadius="xl"
+                justifyContent="flex-start"
+                fontWeight="600"
+                mt={1}
+                onClick={() => { setOpen(false); logout() }}
+              >
+                Sign Out
+              </Button>
+            )}
+          </VStack>
 
           <Button
             type="button"
