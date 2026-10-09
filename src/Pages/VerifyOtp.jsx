@@ -200,13 +200,14 @@ const VerifyOtp = () => {
               mt={3}
               width="full"
               borderRadius="full"
-              bg="rgba(255, 255, 255, 0.16)"
-              color="#ffffff"
+              bg="linear-gradient(135deg, #e8b978 0%, #c49450 100%)"
+              color="#0b1512"
               fontWeight="700"
-              boxShadow="var(--shadow-soft)"
+              boxShadow="0 4px 20px rgba(232, 185, 120, 0.25)"
               _hover={{
                 transform: 'translateY(-2px)',
-                bg: 'rgba(255, 255, 255, 0.24)',
+                bg: 'linear-gradient(135deg, #f5cc8a 0%, #d8a25c 100%)',
+                boxShadow: '0 6px 24px rgba(232, 185, 120, 0.4)',
               }}
             >
               Verify & Activate Account
