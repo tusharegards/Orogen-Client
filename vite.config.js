@@ -14,8 +14,9 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://omnitix-3rc3yup9u-tusharegards-projects.vercel.app',
         changeOrigin: true,
+        secure: false,
       },
     },
   },
